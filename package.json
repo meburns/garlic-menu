@@ -1,0 +1,12 @@
+{
+  "name": "garlic-menu",
+  "version": "1.0.0",
+  "devDependencies": {
+    "electron": "~1.7.8"
+  },
+  "dependencies": {},
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  }
+}
