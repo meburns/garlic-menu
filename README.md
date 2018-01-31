@@ -24,3 +24,6 @@ Mike Burns
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Donations
+If you're feeling generous or just want to thank me for the work, you can send it to GVyh6WYJxXsjfoqkUTgPKeBKZp1WUaWJ7b
