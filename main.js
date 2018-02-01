@@ -1,17 +1,21 @@
 const {app, Tray, Menu, nativeImage} = require('electron')
 let tray = null
 
+// Stop the app from suspending (Must be kept outside of app->ready)
+const powerSaveBlocker = require('electron').powerSaveBlocker;
+powerSaveBlocker.start('prevent-app-suspension');
+
 // Main method
 app.on('ready', () => {
   // define the api endpoint
   const {net} = require('electron')
-  const request = net.request('https://api.coinmarketcap.com/v1/ticker/garlicoin')
 
   // hide the app's dock icon
   app.dock.hide()
 
   // yum, get the current value of garlic. This will get called a lot :)
   const getGarlic = () => {
+    const request = net.request('https://api.coinmarketcap.com/v1/ticker/garlicoin')
     request.on('response', (response) => {
       response.on('data', (chunk) => {
         const amount = JSON.parse(chunk)[0].price_usd;
@@ -41,9 +45,9 @@ app.on('ready', () => {
   getGarlic()
 
   // get an updated price every minute after
-  setInterval(function(){
+  setInterval(() => {
     getGarlic()
-  }, 60000);
+  }, 60000)
 })
 
 app.on('window-all-closed', () => {
