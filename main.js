@@ -10,8 +10,10 @@ app.on('ready', () => {
   // define the api endpoint
   const {net} = require('electron')
 
-  // hide the app's dock icon
-  app.dock.hide()
+  // hide the app's dock icon (MacOS only)
+  if (process.platform == 'darwin') {
+    app.dock.hide()
+  }
 
   // yum, get the current value of garlic. This will get called a lot :)
   const getGarlic = () => {
