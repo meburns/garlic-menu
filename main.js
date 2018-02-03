@@ -1,4 +1,4 @@
-const {app, Tray, Menu, nativeImage} = require('electron')
+const {app, Tray, Menu, nativeImage, net} = require('electron')
 let tray = null
 
 // Stop the app from suspending (Must be kept outside of app->ready)
@@ -7,9 +7,6 @@ powerSaveBlocker.start('prevent-app-suspension');
 
 // Main method
 app.on('ready', () => {
-  // define the api endpoint
-  const {net} = require('electron')
-
   // hide the app's dock icon (MacOS only)
   if (process.platform == 'darwin') {
     app.dock.hide()
@@ -17,10 +14,10 @@ app.on('ready', () => {
 
   // yum, get the current value of garlic. This will get called a lot :)
   const getGarlic = () => {
-    const request = net.request('https://api.coinmarketcap.com/v1/ticker/garlicoin')
+    let request = net.request('https://api.coinmarketcap.com/v1/ticker/garlicoin')
     request.on('response', (response) => {
       response.on('data', (chunk) => {
-        const amount = JSON.parse(chunk)[0].price_usd;
+        let amount = JSON.parse(chunk)[0].price_usd;
         tray.setToolTip(`$${amount}`);
         tray.setTitle(`$${Number.parseFloat(amount).toFixed(2)}`)
       })
