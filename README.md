@@ -5,7 +5,7 @@ Display the GRLC to USD value in the system tray and update it every minute.
 ## Platforms
 
 * MacOS
-* Windows (soon)
+* Windows
 * Linux (soon)
 
 ## Built With

@@ -1,6 +1,6 @@
 {
   "name": "garlic-menu",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A simple Garlicoin to USD system tray app that updates every minute.",
   "author": "Mike Burns",
   "license": "MIT",
