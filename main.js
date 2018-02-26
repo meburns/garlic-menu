@@ -2,6 +2,7 @@ const {app, Tray, Menu, nativeImage, net} = require('electron')
 var moment = require('moment')
 var Jimp = require("jimp")
 let tray = null
+let display_usd = true
 
 // Stop the app from suspending (Must be kept outside of app->ready)
 const powerSaveBlocker = require('electron').powerSaveBlocker
@@ -14,22 +15,33 @@ app.on('ready', () => {
     app.dock.hide()
   }
 
+  // Flip the display_usd value
+  const toggleUnits = () => {
+    display_usd = !display_usd
+    getGarlic()
+  }
+
   // yum, get the current value of garlic. This will get called a lot :)
   const getGarlic = () => {
     let request = net.request('https://api.coinmarketcap.com/v1/ticker/garlicoin')
     request.on('response', (response) => {
       response.on('data', (chunk) => {
-        // Get the current value of GRLC in USD and format it
-        let amount = JSON.parse(chunk)[0].price_usd
-        let pretty_amount = Number.parseFloat(amount).toFixed(2)
-
+        let pretty_amount = ""
+        if (display_usd == true) {
+          // Get the current value of GRLC in USD and format it
+          let amount = JSON.parse(chunk)[0].price_usd
+          pretty_amount = `$${Number.parseFloat(amount).toFixed(2)}`
+        } else {
+          let amount = JSON.parse(chunk)[0].price_btc
+          pretty_amount = `${Number.parseFloat(amount).toFixed(8).substring(5)}₿`
+        }
         // Set the tooltip to show full value and time updated
-        tray.setToolTip(`$${amount} updated at ${moment().format("h:mm")}`)
+        tray.setToolTip(`${pretty_amount} updated at ${moment().format("h:mm")}`)
 
         // different Operating Systems require different methods
         if (process.platform == 'darwin') {
           // MacOs is the easiest, just set the title
-          tray.setTitle(`$${pretty_amount}`)
+          tray.setTitle(pretty_amount)
         } else {
           // On every other system, we have to print the amount to a new image,
           // and then update the icon to use the newly created image
@@ -68,6 +80,10 @@ app.on('ready', () => {
     {
       label: 'Refresh Price',
       click: getGarlic
+    },
+    {
+      label: 'Toggle Units',
+      click: toggleUnits
     },
     {
       label: 'Quit',
